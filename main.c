@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include<unistd.h>
-#inlcude<string.h>
+#include<string.h>
 #define MAX_SEG 10
 int main()
 {
     FILE *fpRead,*fpWrite=NULL;
     char *buff;
-    char *wbuff[80],*pwbuff;
+    char wbuff[80],*pwbuff;
     char mergebuff[30];
     char *pSegment[MAX_SEG];
     int length;
@@ -69,18 +69,38 @@ int main()
         pwbuff=wbuff;
         while(i<sizeof(wbuff)&&wbuff[i])
         {
-            while(wbuff[i]&&wbuff[i]!=',')
+            while(wbuff[i]&&wbuff[i]!=','&&wbuff[i]!='.')
                 i++;
             wbuff[i]=0;
+            i++;
             strcat(mergebuff,pwbuff);
-            pwbuff=pwbuff+i+1;
+            pwbuff=wbuff+i;
             if(fpWrite==NULL)
-                fpWrite=fopen(mergebuff,"wb+");
-            switch(mode)
             {
-                case 0:break;//creat a new file;
-                case 1:break;//file
+                fpWrite=fopen(mergebuff,"wb+");
+                fputs(pSegment[0],fpWrite);
+                fputs(mergebuff,fpWrite);
+                mergebuff[0]=0;
+                round=1;
             }
+            else
+                if(round<segmentNum-2)
+                {
+                    fputs(pSegment[round++],fpWrite);
+                    fputs(mergebuff,fpWrite);
+                    mergebuff[0]=0;
+                }
+                else
+                    {
+                        fputs(pSegment[round++],fpWrite);
+                        fputs(mergebuff,fpWrite);
+                        mergebuff[0]=0;
+                        fputs(pSegment[round],fpWrite);
+                        fclose(fpWrite);
+                        fpWrite=NULL;
+                    }
+
+
         }
 
     }
