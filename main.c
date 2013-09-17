@@ -80,6 +80,8 @@ int main()
             while(wbuff[i])
                 if(wbuff[i]==10||wbuff[i]==13)
                     i++;
+                else
+                    break;
             strcat(mergebuff,pwbuff);
             pwbuff=wbuff+i;
             if(flag)
