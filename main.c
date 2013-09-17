@@ -7,7 +7,7 @@ int main()
 {
     FILE *fpRead,*fpWrite=NULL;
     char *buff;
-    char wbuff[80],*pwbuff;
+    char wbuff[10],*pwbuff;
     char mergebuff[30];
     char *pSegment[MAX_SEG];
     int length;
@@ -71,34 +71,45 @@ int main()
         {
             while(wbuff[i]&&wbuff[i]!=','&&wbuff[i]!='.')
                 i++;
+            if(wbuff[i]==','||wbuff[i]=='.')
+                flag=1;
+            else
+                flag=0;
             wbuff[i]=0;
             i++;
+            while(wbuff[i])
+                if(wbuff[i]==10||wbuff[i]==13)
+                    i++;
             strcat(mergebuff,pwbuff);
             pwbuff=wbuff+i;
-            if(fpWrite==NULL)
+            if(flag)
             {
-                fpWrite=fopen(mergebuff,"wb+");
-                fputs(pSegment[0],fpWrite);
-                fputs(mergebuff,fpWrite);
-                mergebuff[0]=0;
-                round=1;
-            }
-            else
-                if(round<segmentNum-2)
+                if(fpWrite==NULL)
                 {
-                    fputs(pSegment[round++],fpWrite);
+                    fpWrite=fopen(mergebuff,"wb+");
+                    fputs(pSegment[0],fpWrite);
                     fputs(mergebuff,fpWrite);
                     mergebuff[0]=0;
+                    round=1;
                 }
                 else
+                    if(round<segmentNum-2)
                     {
                         fputs(pSegment[round++],fpWrite);
                         fputs(mergebuff,fpWrite);
                         mergebuff[0]=0;
-                        fputs(pSegment[round],fpWrite);
-                        fclose(fpWrite);
-                        fpWrite=NULL;
                     }
+                    else
+                        {
+                            fputs(pSegment[round++],fpWrite);
+                            fputs(mergebuff,fpWrite);
+                            mergebuff[0]=0;
+                            fputs(pSegment[round],fpWrite);
+                            fclose(fpWrite);
+                            fpWrite=NULL;
+                        }
+
+            }
 
 
         }
