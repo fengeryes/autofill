@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include<unistd.h>
 #include<string.h>
-#define MAX_SEG 10
+#define MAX_SEG 100
 int main()
 {
     FILE *fpRead,*fpWrite=NULL;
     char *buff;
-    char wbuff[10],*pwbuff;
-    char mergebuff[30];
+    char wbuff[128],*pwbuff;
+    char mergebuff[300];
     char *pSegment[MAX_SEG];
     int length;
     int i,j,k,temp,segmentNum;
@@ -19,13 +19,15 @@ int main()
         sleep(2);
         return 1;
     }
-    printf("file read success\n");
     fseek(fpRead,0,SEEK_END);
     length=ftell(fpRead);
     buff=(char *)malloc(sizeof(char)*(length+1));
     fseek(fpRead,0,SEEK_SET);
-    fgets(buff,length+1,fpRead);
+    printf("length %d\n",length);
+   // fgets(buff,length+1,fpRead);
+    fread(buff,sizeof(char),length,fpRead);
     fclose(fpRead);
+ //   puts(buff);
     i=0;
     j=1;
     pSegment[i]=buff;
@@ -69,7 +71,7 @@ int main()
         pwbuff=wbuff;
         while(i<sizeof(wbuff)&&wbuff[i])
         {
-            while(wbuff[i]&&wbuff[i]!=','&&wbuff[i]!='.')
+            while(i<sizeof(wbuff)&&wbuff[i]!=','&&wbuff[i]!='.')
                 i++;
             if(wbuff[i]==','||wbuff[i]=='.')
                 flag=1;
@@ -77,7 +79,7 @@ int main()
                 flag=0;
             wbuff[i]=0;
             i++;
-            while(wbuff[i])
+            while(i<sizeof(wbuff)&&wbuff[i])
                 if(wbuff[i]==10||wbuff[i]==13)
                     i++;
                 else
@@ -110,13 +112,8 @@ int main()
                             fclose(fpWrite);
                             fpWrite=NULL;
                         }
-
             }
-
-
         }
-
     }
-
     return 0;
 }
