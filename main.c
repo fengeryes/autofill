@@ -16,7 +16,8 @@ int main()
     if((fpRead=fopen("source","rb+"))==NULL)
     {
         printf("can not open template file\n");
-        sleep(2);
+    //    sleep(2);
+        getchar();
         return 1;
     }
     fseek(fpRead,0,SEEK_END);
@@ -60,7 +61,8 @@ int main()
     if((fpRead=fopen("element","rb+"))==NULL)
     {
         printf("can not open element file\n");
-        sleep(2);
+ //       sleep(2);
+        getchar();
         return 2;
     }
     round=0;
